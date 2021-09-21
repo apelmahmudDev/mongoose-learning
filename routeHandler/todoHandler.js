@@ -6,7 +6,39 @@ const todoSchema = require("../schemas/todoSchema");
 const Todo = new mongoose.model("Todo", todoSchema);
 
 // get all todos
-router.get("/", async (req, res) => {});
+// router.get("/", async (req, res) => {
+// 	await Todo.find({ status: "active" }, (err, todos) => {
+// 		if (err) {
+// 			res.status(500).json({ error: "There was a server side error!" });
+// 		} else {
+// 			res.status(200).json({
+// 				result: todos,
+// 				message: "success!",
+// 			});
+// 		}
+// 	});
+// });
+
+// get all todos & selected are not visible
+router.get("/", async (req, res) => {
+	await Todo.find({ status: "active" })
+		.select({
+			_id: 0,
+			_v: 0,
+			date: 0,
+		})
+		.limit(5)
+		.exec((err, todos) => {
+			if (err) {
+				res.status(500).json({ error: "There was a server side error!" });
+			} else {
+				res.status(200).json({
+					result: todos,
+					message: "success",
+				});
+			}
+		});
+});
 
 // get a todo by id
 router.get("/:id", async (req, res) => {});
@@ -51,6 +83,14 @@ router.put("/:id", async (req, res) => {
 });
 
 // delete a todo by id
-router.delete("/:id", async (req, res) => {});
+router.delete("/:id", async (req, res) => {
+	await Todo.deleteOne({ _id: req.params.id }, (err) => {
+		if (err) {
+			res.status("500").json({ error: "There was a server side error!" });
+		} else {
+			res.status(200).json({ message: "Todo delete successfully!" });
+		}
+	});
+});
 
 module.exports = router;
