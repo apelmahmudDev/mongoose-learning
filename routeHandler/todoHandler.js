@@ -5,19 +5,6 @@ const todoSchema = require("../schemas/todoSchema");
 
 const Todo = new mongoose.model("Todo", todoSchema);
 
-// get all todos by async await
-router.get("/", async (req, res) => {
-	try {
-		const data = await Todo.find({ status: "active" });
-		res.status(200).json({
-			result: data,
-			message: "success!",
-		});
-	} catch (err) {
-		res.status(500).json({ error: "There was a server side error!" });
-	}
-});
-
 // get all todos & selected are not visible by callback
 // router.get("/", (req, res) => {
 // 	Todo.find({ status: "active" })
@@ -38,6 +25,19 @@ router.get("/", async (req, res) => {
 // 			}
 // 		});
 // });
+
+// get all todos by async await
+router.get("/", async (req, res) => {
+	try {
+		const data = await Todo.find({ status: "active" });
+		res.status(200).json({
+			result: data,
+			message: "success!",
+		});
+	} catch (err) {
+		res.status(500).json({ error: "There was a server side error!" });
+	}
+});
 
 // get a todo by id with async-await
 router.get("/:id", async (req, res) => {
