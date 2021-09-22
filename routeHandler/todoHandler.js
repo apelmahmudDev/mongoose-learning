@@ -39,8 +39,19 @@ router.get("/", async (req, res) => {
 // 		});
 // });
 
-// get a todo by id
-router.get("/:id", async (req, res) => {});
+// get a todo by id with async-await
+router.get("/:id", async (req, res) => {
+	const data = await Todo.findOne({ _id: req.params.id });
+	try {
+		res.status(200).json({
+			result: data,
+		});
+	} catch (err) {
+		res.status(500).json({
+			error: "There was a server side error!",
+		});
+	}
+});
 
 // post a todo by async await
 router.post("/", async (req, res) => {
